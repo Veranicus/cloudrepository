@@ -28,7 +28,8 @@
         </nav>
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
-                <form action="#" enctype="multipart/form-data" method="POST">
+                <form action="#" enctype="multipart/form-data" method="POST"
+                      th:action="@{/home/saveFile}">
                     <div class="container">
                         <div class="row" style="margin: 1em;">
                             <div class="col-sm-2">
@@ -52,13 +53,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <a target="_blank" class="btn btn-success">View</a>
-                                <a class="btn btn-danger">Delete</a>
-                            </td>
-                            <th scope="row">ExampleFile.txt</th>
-                        </tr>
+                        <div th:each="file : ${allFiles}">
+                            <tr>
+                                <td>
+                                    <a target="_blank" class="btn btn-success">View</a>
+                                    <a class="btn btn-danger">Delete</a>
+                                </td>
+                                <th scope="row" th:text="${file.filename}">Example.txt
+                                    <Example class="txt"></Example>
+                                </th>
+                            </tr>
+                        </div>
                         </tbody>
                     </table>
                 </div>
@@ -79,16 +84,22 @@
                         </tr>
                         </thead>
                         <div th:each="note : ${allNotes}">
+                            <form th:object="${noteModel}" action="#" method="POST" th:action="@{/home/editNote}">
                             <tbody>
                             <tr>
                                 <td>
-                                    <button type="button" class="btn btn-success">Edit</button>
+                                    <button type="button" class="btn btn-success"
+                                            onclick="editNoteModal('updateNote', this.getAttribute('data-noteId'),
+                                            this.getAttribute('data-noteTitle'),
+                                             this.getAttribute('data-noteDescription'))">Edit
+                                    </button>
                                     <a class="btn btn-danger">Delete</a>
                                 </td>
                                 <th scope="row" th:text="${note.noteTitle}">Example Note Title</th>
                                 <td th:text="${note.noteDescription}">Example Note Description</td>
                             </tr>
                             </tbody>
+                            </form>
                         </div>
                     </table>
                 </div>
@@ -154,7 +165,7 @@
                                 </td>
                                 <th scope="row" th:text="${credential.url}">Example Credential URL</th>
                                 <td th:text="${credential.username}">Example Credential Username</td>
-                                <td th:text="${credential.password}" >Example Credential Password</td>
+                                <td th:text="${credential.password}">Example Credential Password</td>
                             </tr>
                         </div>
                         </tbody>
@@ -172,7 +183,8 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="#" th:object="${credentialModel}" method="POST" th:action="@{/home/saveCredential}">
+                                <form action="#" th:object="${credentialModel}" method="POST"
+                                      th:action="@{/home/saveCredential}">
                                     <input type="hidden" name="credentialId" id="credential-id">
                                     <div class="form-group">
                                         <label for="note-title" class="col-form-label">URL</label>
@@ -220,6 +232,7 @@
         $('#noteModal').modal('show');
     }
 
+
     // For opening the credentials modal
     function showCredentialModal(credentialId, url, username, password) {
         $('#credential-id').val(credentialId ? credentialId : '');
@@ -227,6 +240,15 @@
         $('#credential-username').val(username ? username : '');
         $('#credential-password').val(password ? password : '');
         $('#credentialModal').modal('show');
+    }
+
+    //Function to show modal with some prepopulated fields
+    function editNoteModal(formAction, noteId, noteTitle, noteDescription) {
+        $('#note-form').attr('action', formAction ? formAction : 'home/saveNote');
+        $('#note-id').val(noteId ? noteId : '');
+        $('#note-title').val(noteTitle ? noteTitle : '');
+        $('#note-description').val(noteDescription ? noteDescription : '');
+        $('#noteModal').modal('show');
     }
 </script>
 </body>
