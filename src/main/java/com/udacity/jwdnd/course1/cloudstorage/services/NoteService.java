@@ -41,9 +41,19 @@ public class NoteService {
         noteMapper.insertNote(note);
     }
 
+    public int editNote(Note note, Authentication authentication) {
+
+        System.out.println(note.getNoteId());
+//        Note noteforUpdate = noteMapper.getNoteById(note.getNoteId());
+//        logger.info("editing object " + noteforUpdate.getNoteTitle());
+        System.out.println(noteMapper.updateNote(note.getNoteTitle(),note.getNoteDescription(),note.getNoteId()));
+        return noteMapper.updateNote(note.getNoteTitle(),note.getNoteDescription(),note.getNoteId());
+    }
+
     public List<Note> getAllNotes(){
         for (Note note: noteMapper.getAllNotes()){
             logger.info(note.getNoteTitle());
+            logger.info(note.getNoteId().toString() + " VALUE OF INT GETALLNOTES");
         }
         return noteMapper.getAllNotes();
     }

@@ -1,7 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.entities.Note;
 import com.udacity.jwdnd.course1.cloudstorage.models.CredentialModel;
 import com.udacity.jwdnd.course1.cloudstorage.models.FileModel;
+import com.udacity.jwdnd.course1.cloudstorage.models.NoteIdModel;
 import com.udacity.jwdnd.course1.cloudstorage.models.NoteModel;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
@@ -23,7 +25,6 @@ public class HomeController {
     private CredentialService credentialService;
 
     private FileService fileService;
-
 
 
     public HomeController(NoteService noteService, CredentialService credentialService, FileService fileService) {
@@ -49,7 +50,18 @@ public class HomeController {
         return "result";
     }
 
-    @PostMapping("/saveCredential")
+    @PostMapping("/editNote")
+    public String editNote(@ModelAttribute(value = "note") Note note,
+                           @ModelAttribute(value = "noteId") NoteIdModel noteIdModel, Model model,
+                           Authentication authentication) {
+        System.out.println("noteid " + note.getNoteId());
+        System.out.println("noteidHidden " + noteIdModel.getNoteIdHidden());
+        System.out.println("notedesc" + note.getNoteDescription());
+        noteService.editNote(note, authentication);
+        return "result";
+    }
+
+    @PostMapping(value = "/saveCredential")
     public String saveCredential(@ModelAttribute("credentialModel") CredentialModel credentialModel, Model model,
                                  Authentication authentication) {
         credentialService.saveCredential(credentialModel, authentication);
@@ -57,7 +69,7 @@ public class HomeController {
     }
 
     @PostMapping("/saveFile")
-    public String saveFile( Model model,@RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication) {
+    public String saveFile(Model model, @RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication) {
         try {
             FileModel fileModel1 = new FileModel(fileUpload.getOriginalFilename(), fileUpload.getContentType(),
                     String.valueOf(fileUpload.getSize()), fileUpload.getBytes());

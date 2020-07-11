@@ -32,4 +32,20 @@ public class Note {
     public Integer getUserId() {
         return userId;
     }
+
+    public void setNoteId(Integer noteId) {
+        this.noteId = noteId;
+    }
+
+    public void setNoteTitle(String noteTitle) {
+        this.noteTitle = noteTitle;
+    }
+
+    public void setNoteDescription(String noteDescription) {
+        this.noteDescription = noteDescription;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 }
