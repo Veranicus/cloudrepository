@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.entities.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.entities.Note;
 import com.udacity.jwdnd.course1.cloudstorage.models.CredentialModel;
 import com.udacity.jwdnd.course1.cloudstorage.models.FileModel;
@@ -79,6 +80,15 @@ public class HomeController {
     public String saveCredential(@ModelAttribute("credentialModel") CredentialModel credentialModel, Model model,
                                  Authentication authentication) {
         credentialService.saveCredential(credentialModel, authentication);
+        return "result";
+    }
+
+    @PostMapping("/editCredential")
+    public String editCredential(@ModelAttribute(value = "credential") Credential credential, Model model,
+                                 Authentication authentication) {
+        System.out.println("credentialId " + credential.getCredentialId());
+        System.out.println("credential url" + credential.getUrl());
+        credentialService.updateCredential(credential, authentication);
         return "result";
     }
 

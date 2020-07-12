@@ -37,6 +37,11 @@ public class CredentialService {
         return credentialMapper.insertCredential(credential);
     }
 
+    public int updateCredential(Credential credential, Authentication authentication) {
+        return credentialMapper.updateCredential(credential.getUrl(),credential.getUsername(),credential.getPassword(),
+                credential.getCredentialId());
+    }
+
     public List<Credential> getAllCredentials(){
         return credentialMapper.selectAllCredentials();
     }

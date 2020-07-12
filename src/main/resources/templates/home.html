@@ -18,18 +18,14 @@
     <div id="contentDiv" style="clear: right;">
         <nav style="clear: right;">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link active" id="nav-files-tab" data-toggle="tab" href="#nav-files" role="tab"
-                   aria-controls="nav-files" aria-selected="true">Files</a>
-                <a class="nav-item nav-link" id="nav-notes-tab" data-toggle="tab" href="#nav-notes" role="tab"
-                   aria-controls="nav-notes" aria-selected="false">Notes</a>
-                <a class="nav-item nav-link" id="nav-credentials-tab" data-toggle="tab" href="#nav-credentials"
-                   role="tab" aria-controls="nav-credentials" aria-selected="false">Credentials</a>
+                <a class="nav-item nav-link active" id="nav-files-tab" data-toggle="tab" href="#nav-files" role="tab" aria-controls="nav-files" aria-selected="true">Files</a>
+                <a class="nav-item nav-link" id="nav-notes-tab" data-toggle="tab" href="#nav-notes" role="tab" aria-controls="nav-notes" aria-selected="false">Notes</a>
+                <a class="nav-item nav-link" id="nav-credentials-tab" data-toggle="tab" href="#nav-credentials" role="tab" aria-controls="nav-credentials" aria-selected="false">Credentials</a>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
-                <form action="#" enctype="multipart/form-data" method="POST"
-                      th:action="@{/home/saveFile}">
+                <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/home/saveFile}">
                     <div class="container">
                         <div class="row" style="margin: 1em;">
                             <div class="col-sm-2">
@@ -52,140 +48,135 @@
                             <th style="width: 80%" scope="col">File Name</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <div th:each="file : ${allFiles}">
-                            <tr>
-                                <td>
-                                    <a target="_blank" class="btn btn-success">View</a>
-                                    <a class="btn btn-danger">Delete</a>
-                                </td>
-                                <th scope="row" th:text="${file.filename}">Example.txt
-                                    <Example class="txt"></Example>
-                                </th>
-                            </tr>
-                        </div>
+                    <tbody>
+                        <tr th:unless="${#lists.isEmpty(allFiles)}"
+                            th:each="file : ${allFiles}">
+                            <td>
+                                <a target="_blank" class="btn btn-success">View</a>
+                                <a class="btn btn-danger">Delete</a>
+                            </td>
+                            <th scope="row" th:text="${file.filename}"></th>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                <button style="margin: 0.25em;" type="button" class="btn btn-info float-right"
-                        onclick="showNoteModal()">
-                    + Add a New Note
-                </button>
+        <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
+            <button style="margin: 0.25em;" type="button" class="btn btn-info float-right"
+                    onclick="showNoteModal()">
+                + Add a New Note
+            </button>
 
-                <div class="table-responsive">
-                    <table class="table table-striped" id="userTable">
-                        <thead>
-                        <tr>
-                            <th style="width: 20%" scope="col"></th>
-                            <th style="width: 20%" scope="col">Title</th>
-                            <th style="width: 60%" scope="col">Description</th>
-                        </tr>
-                        </thead>
-                        <!--                        <div th:each="note : ${allNotes}">-->
-                        <tbody>
-                        <tr th:unless="${#lists.isEmpty(allNotes)}"
-                            th:each="note : ${allNotes}">
-                            <td>
-                                <form action="#" method="POST" th:action="@{/home/editNote}"
-                                      th:object="${note}">
-                                    <input type="hidden" id="noteId" name="noteId" th:value="*{noteId}">
-                                    <input type="hidden" id="noteTitle" name="noteId" th:value="*{noteTitle}">
-                                    <input type="hidden" id="noteDescription" name="noteId"
-                                           th:value="*{noteDescription}">
-                                    <button type="button" class="btn btn-success"
-                                            th:data-noteId="${note.noteId}"
-                                            th:data-noteTitle="${note.noteTitle}"
-                                            th:data-noteDescription="${note.noteDescription}"
-                                            th:onclick="javascript:editNoteModel([[${note}]])">Edit
-                                    </button>
-                                </form>
-                                <form action="#" method="POST" th:action="@{/home/deleteNote}">
-                                    <input type="hidden" name="noteId" th:value="*{note.noteId}">
-                                    <button class="btn btn-danger"
-                                            th:onclick="javascript:deleteNoteModel([[${note}]])">Delete
-                                    </button>
-                                </form>
-                            </td>
-                            <th scope="row" th:text="${note.noteTitle}">Example Note Title</th>
-                            <td th:text="${note.noteDescription}">Example Note Description</td>
+            <div class="table-responsive">
+                <table class="table table-striped" id="userTable">
+                    <thead>
+                    <tr>
+                        <th style="width: 20%" scope="col"></th>
+                        <th style="width: 20%" scope="col">Title</th>
+                        <th style="width: 60%" scope="col">Description</th>
+                    </tr>
+                    </thead>
+                    <!--                        <div th:each="note : ${allNotes}">-->
+                    <tbody>
+                    <tr th:unless="${#lists.isEmpty(allNotes)}"
+                        th:each="note : ${allNotes}">
+                        <td>
+                            <form action="#" method="POST" th:action="@{/home/editNote}"
+                                  th:object="${note}">
+                                <input type="hidden" id="noteId" name="noteId" th:value="*{noteId}">
+                                <input type="hidden" id="noteTitle" name="noteId" th:value="*{noteTitle}">
+                                <input type="hidden" id="noteDescription" name="noteId"
+                                       th:value="*{noteDescription}">
+                                <button type="button" class="btn btn-success"
+                                        th:data-noteId="${note.noteId}"
+                                        th:data-noteTitle="${note.noteTitle}"
+                                        th:data-noteDescription="${note.noteDescription}"
+                                        th:onclick="javascript:editNoteModel([[${note}]])">Edit
+                                </button>
                             </form>
-                        </tr>
-                        </tbody>
-                        <!--                        </div>-->
-                    </table>
-                </div>
-                <div class="modal fade" id="editnoteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editnoteModalLabel">Note</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                            <form action="#" method="POST" th:action="@{/home/deleteNote}">
+                                <input type="hidden" name="noteId" th:value="*{note.noteId}">
+                                <button class="btn btn-danger"
+                                        th:onclick="javascript:deleteNoteModel([[${note}]])">Delete
                                 </button>
+                            </form>
+                        </td>
+                        <th scope="row" th:text="${note.noteTitle}">Example Note Title</th>
+                        <td th:text="${note.noteDescription}">Example Note Description</td>
+                        </form>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal fade" id="editnoteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editnoteModalLabel">Note</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:object="${noteModel}" action="#" method="POST" th:action="@{/home/editNote}">
+                            <input type="hidden" name="noteId" id="editNote-id">
+                            <div class="form-group">
+                                <label for="note-title" class="col-form-label">Title</label>
+                                <input type="text" name="noteTitle" class="form-control" id="editNote-title"
+                                       maxlength="20" required>
                             </div>
-                            <div class="modal-body">
-                                <form th:object="${noteModel}" action="#" method="POST" th:action="@{/home/editNote}">
-                                    <input type="hidden" name="noteId" id="editNote-id">
-                                    <div class="form-group">
-                                        <label for="note-title" class="col-form-label">Title</label>
-                                        <input type="text" name="noteTitle" class="form-control" id="editNote-title"
-                                               maxlength="20" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="note-description" class="col-form-label">Description</label>
-                                        <textarea class="form-control" name="noteDescription" id="editNote-description"
-                                                  rows="5" maxlength="1000" required></textarea>
-                                    </div>
-                                    <button id="editNoteSubmit" type="submit" class="d-none"></button>
-                                </form>
+                            <div class="form-group">
+                                <label for="note-description" class="col-form-label">Description</label>
+                                <textarea class="form-control" name="noteDescription" id="editNote-description"
+                                          rows="5" maxlength="1000" required></textarea>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="$('#editNoteSubmit').click();">
-                                    Save
-                                    changes
-                                </button>
-                            </div>
-                        </div>
+                            <button id="editNoteSubmit" type="submit" class="d-none"></button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="$('#editNoteSubmit').click();">
+                            Save
+                            changes
+                        </button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="noteModalLabel">Note</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form th:object="${noteModel}" action="#" method="POST" th:action="@{/home/saveNote}">
-                                <input type="hidden" name="noteId" id="note-id">
-                                <div class="form-group">
-                                    <label for="note-title" class="col-form-label">Title</label>
-                                    <input type="text" name="noteTitle" class="form-control" id="note-title"
-                                           maxlength="20" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="note-description" class="col-form-label">Description</label>
-                                    <textarea class="form-control" name="noteDescription" id="note-description"
-                                              rows="5" maxlength="1000" required></textarea>
-                                </div>
-                                <button id="noteSubmit" type="submit" class="d-none"></button>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save
-                                changes
-                            </button>
-                        </div>
+        <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="noteModalLabel">Note</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:object="${noteModel}" action="#" method="POST" th:action="@{/home/saveNote}">
+                            <input type="hidden" name="noteId" id="note-id">
+                            <div class="form-group">
+                                <label for="note-title" class="col-form-label">Title</label>
+                                <input type="text" name="noteTitle" class="form-control" id="note-title"
+                                       maxlength="20" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="note-description" class="col-form-label">Description</label>
+                                <textarea class="form-control" name="noteDescription" id="note-description"
+                                          rows="5" maxlength="1000" required></textarea>
+                            </div>
+                            <button id="noteSubmit" type="submit" class="d-none"></button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save
+                            changes
+                        </button>
                     </div>
                 </div>
             </div>
@@ -221,7 +212,6 @@
                     </tbody>
                 </table>
             </div>
-
             <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog"
                  aria-labelledby="credentialModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -266,7 +256,7 @@
         </div>
     </div>
 </div>
-</div>
+
 
 <script th:src="@{/js/jquery-slim.min.js}"></script>
 <script th:src="@{/js/popper.min.js}"></script>
