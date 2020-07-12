@@ -3,7 +3,6 @@ package com.udacity.jwdnd.course1.cloudstorage.controllers;
 import com.udacity.jwdnd.course1.cloudstorage.entities.Note;
 import com.udacity.jwdnd.course1.cloudstorage.models.CredentialModel;
 import com.udacity.jwdnd.course1.cloudstorage.models.FileModel;
-import com.udacity.jwdnd.course1.cloudstorage.models.NoteIdModel;
 import com.udacity.jwdnd.course1.cloudstorage.models.NoteModel;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
@@ -54,18 +53,16 @@ public class HomeController {
     }
 
     @PostMapping("/deleteNote")
-    public String deleteNote(@ModelAttribute("noteId") NoteIdModel noteIdModel, Model model,
-                             Authentication authentication) {
-        System.out.println("deleting NOTE: " + noteIdModel.getNoteIdHidden());
+    public String deleteNote(@ModelAttribute(value = "note") Note note) {
+        System.out.println("deleting NOTE: " + note.getNoteId());
+        noteService.deleteNote(note.getNoteId());
         return "result";
     }
 
     @PostMapping("/editNote")
-    public String editNote(@ModelAttribute(value = "note") Note note,
-                           @ModelAttribute(value = "noteId") NoteIdModel noteIdModel, Model model,
+    public String editNote(@ModelAttribute(value = "note") Note note, Model model,
                            Authentication authentication) {
         System.out.println("noteid " + note.getNoteId());
-        System.out.println("noteidHidden " + noteIdModel.getNoteIdHidden());
         System.out.println("notedesc" + note.getNoteDescription());
         noteService.editNote(note, authentication);
         return "result";

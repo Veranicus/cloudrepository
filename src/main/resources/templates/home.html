@@ -92,21 +92,20 @@
                                       th:object="${note}">
                                     <input type="hidden" id="noteId" name="noteId" th:value="*{noteId}">
                                     <input type="hidden" id="noteTitle" name="noteId" th:value="*{noteTitle}">
-                                    <input type="hidden" id="noteDescription" name="noteId" th:value="*{noteDescription}">
-                                    <button
+                                    <input type="hidden" id="noteDescription" name="noteId"
+                                           th:value="*{noteDescription}">
+                                    <button type="button" class="btn btn-success"
                                             th:data-noteId="${note.noteId}"
                                             th:data-noteTitle="${note.noteTitle}"
                                             th:data-noteDescription="${note.noteDescription}"
-                                            type="button"
-                                            onclick="showNoteModal(this.getAttribute('data-noteId'),
-                                             this.getAttribute('data-noteTitle'),
-                                             this.getAttribute('data-noteDescription'))"
-                                            class="btn btn-success">Edit
+                                            th:onclick="javascript:editNoteModel([[${note}]])">Edit
                                     </button>
                                 </form>
                                 <form action="#" method="POST" th:action="@{/home/deleteNote}">
                                     <input type="hidden" name="noteId" th:value="*{note.noteId}">
-                                    <a class="btn btn-danger">Delete</a>
+                                    <button class="btn btn-danger"
+                                            th:onclick="javascript:deleteNoteModel([[${note}]])">Delete
+                                    </button>
                                 </form>
                             </td>
                             <th scope="row" th:text="${note.noteTitle}">Example Note Title</th>
@@ -293,14 +292,27 @@
         $('#credentialModal').modal('show');
     }
 
-    //Function to show modal with some prepopulated fields
-    function editNoteModal(formAction, noteId, noteTitle, noteDescription) {
-        $('#note-form').attr('action', formAction ? formAction : 'home/editNote');
-        $('#editnote-id').val(noteId ? noteId : '');
-        $('#editnote-title').val(noteTitle ? noteTitle : '');
-        $('#editnote-description').val(noteDescription ? noteDescription : '');
+    function editNoteModel(note) {
+        $('#editNote-id').val(note.noteId ? note.noteId : '');
+        $('#editNote-title').val(note.noteTitle ? note.noteTitle : '');
+        $('#editNote-description').val(note.noteDescription ? note.noteDescription : '');
         $('#editnoteModal').modal('show');
     }
+
+    function deleteNoteModel(note) {
+        $('#editNote-id').val(note.noteId ? note.noteId : '');
+        $('#editNote-title').val(note.noteTitle ? note.noteTitle : '');
+        $('#editNote-description').val(note.noteDescription ? note.noteDescription : '');
+    }
+
+    //Function to show modal with some prepopulated fields
+    // function editNoteModal(formAction, noteId, noteTitle, noteDescription) {
+    //     $('#note-form').attr('action', formAction ? formAction : 'home/editNote');
+    //     $('#editnote-id').val(noteId ? noteId : '');
+    //     $('#editnote-title').val(noteTitle ? noteTitle : '');
+    //     $('#editnote-description').val(noteDescription ? noteDescription : '');
+    //     $('#editnoteModal').modal('show');
+    // }
 </script>
 </body>
 </html>

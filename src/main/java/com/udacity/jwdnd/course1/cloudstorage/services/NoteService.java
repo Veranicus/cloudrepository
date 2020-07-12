@@ -57,4 +57,8 @@ public class NoteService {
         }
         return noteMapper.getAllNotes();
     }
+
+    public void deleteNote(Integer noteId){
+        noteMapper.deleteNote(noteId);
+    }
 }
