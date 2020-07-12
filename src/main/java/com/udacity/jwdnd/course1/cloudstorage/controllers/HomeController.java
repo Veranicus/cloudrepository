@@ -46,7 +46,17 @@ public class HomeController {
     @PostMapping("/saveNote")
     public String saveNote(@ModelAttribute("noteModel") NoteModel noteModel, Model model,
                            Authentication authentication) {
+
+        System.out.println(noteModel.getNoteId());
         noteService.saveNote(noteModel, authentication);
+        System.out.println("SAVING NOTE: " + noteModel.getNoteDescription());
+        return "result";
+    }
+
+    @PostMapping("/deleteNote")
+    public String deleteNote(@ModelAttribute("noteId") NoteIdModel noteIdModel, Model model,
+                             Authentication authentication) {
+        System.out.println("deleting NOTE: " + noteIdModel.getNoteIdHidden());
         return "result";
     }
 
@@ -60,6 +70,13 @@ public class HomeController {
         noteService.editNote(note, authentication);
         return "result";
     }
+//
+//    @PostMapping(path = "/editNote/{editNoteId}")
+//    public String editNote(@RequestBody Note note, @PathVariable(value = "editNoteId") Integer noteId) {
+//        System.out.println("noteid " + noteId);
+//        System.out.println("notedesc" + note.getNoteDescription());
+//        return "result";
+//    }
 
     @PostMapping(value = "/saveCredential")
     public String saveCredential(@ModelAttribute("credentialModel") CredentialModel credentialModel, Model model,
