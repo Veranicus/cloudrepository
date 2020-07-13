@@ -205,7 +205,7 @@
                                         th:data-credentialId="${credential.credentialId}"
                                         th:data-url="${credential.url}"
                                         th:data-username="${credential.username}"
-                                        th:data-password="${decryptedCredentialPassword}"
+                                        th:data-password="${credential.password}"
                                         th:onclick="javascript:editCredentialModel([[${credential}]])">Edit</button>
                                 <form action="#" method="POST" th:action="@{/home/deleteCredential}">
                                     <input type="hidden" name="credentialId" th:value="${credential.credentialId}">
@@ -336,14 +336,29 @@
     }
 
     function editCredentialModel(credential) {
+        const http = new XMLHttpRequest()
+
+        http.open("GET", "http://localhost:8080/home/getDecryptedPassword/" + credential.credentialId)
+        http.setRequestHeader("Content-Type","application/json")
+        http.send()
+        http.onload = () => $('#editCredential-password').val(http.responseText? http.responseText : '');
+        // http.onload = () => paswText = http.responseText
         $('#editCredential-id').val(credential.credentialId ? credential.credentialId : '');
         $('#editCredential-url').val(credential.url ? credential.url : '');
         $('#editCredential-username').val(credential.username ? credential.username : '');
-        $('#editCredential-password').val(credential.password ? credential.password: '');
         $('#editCredentialModal').modal('show');
 
     }
-
+    // function httpGetAsync(theUrl, callback)
+    // {
+    //     var xmlHttp = new XMLHttpRequest();
+    //     xmlHttp.onreadystatechange = function() {
+    //         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+    //             callback(xmlHttp.responseText);
+    //     }
+    //     xmlHttp.open("GET", theUrl, true); // true for asynchronous
+    //     xmlHttp.send(null);
+    // }
     function editNoteModel(note) {
         $('#editNote-id').val(note.noteId ? note.noteId : '');
         $('#editNote-title').val(note.noteTitle ? note.noteTitle : '');

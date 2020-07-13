@@ -8,6 +8,8 @@ import com.udacity.jwdnd.course1.cloudstorage.models.NoteModel;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,10 +85,11 @@ public class HomeController {
         return "result";
     }
 
-    @PostMapping(value = "/postForDecryptedPassword")
-    public String postForDecryptedPassword(@RequestBody Credential credential, Authentication authentication) {
-        System.out.println("Password to ask for is " + credential.getPassword() + credential.getCredentialId());
-        return "result";
+    @GetMapping(value = "/getDecryptedPassword/{credentialId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getDecryptedPassword(@PathVariable(value = "credentialId") String credentialId) {
+        System.out.println("credentialId" + credentialId);
+        String result = credentialService.getDecryptedCredentialPassword(Integer.valueOf(credentialId));
+        return ResponseEntity.ok(result);
     }
 
 
@@ -95,11 +98,10 @@ public class HomeController {
                                  Authentication authentication) {
         System.out.println("credentialId " + credential.getCredentialId());
         System.out.println("credential url" + credential.getUrl());
-        model.addAttribute("decryptedCredentialPassword",
-                credentialService.getDecryptedCredentialPassword(credential.getCredentialId()));
-        credentialService.updateCredential(credential, authentication);
+//        model.addAttribute("decryptedCredentialPassword",
 
-        return "home";
+        credentialService.updateCredential(credential, authentication);
+        return "result";
     }
 
     @PostMapping("/deleteCredential")
