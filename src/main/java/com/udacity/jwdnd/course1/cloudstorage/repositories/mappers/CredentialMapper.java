@@ -19,9 +19,12 @@ public interface CredentialMapper {
     @Options(useGeneratedKeys = true,keyProperty = "credentialId")
     int insertCredential(Credential credential);
 
-    @Update("UPDATE CREDENTIALS SET url=#{url}, username=#{username}, password=#{password}," +
+    @Update("UPDATE CREDENTIALS SET url=#{url}, username=#{username}, password=#{password} " +
             "WHERE credentialId = #{credentialId}")
     int updateCredential(@Param("url") String url, @Param("username") String username, @Param("password") String password,
                    @Param("credentialId")Integer credentialId);
+
+    @Delete("DELETE FROM CREDENTIALS WHERE credentialId = #{credentialId}")
+    int deleteCredential(Integer credentialId);
 
 }

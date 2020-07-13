@@ -38,13 +38,24 @@ public class CredentialService {
     }
 
     public int updateCredential(Credential credential, Authentication authentication) {
-        return credentialMapper.updateCredential(credential.getUrl(),credential.getUsername(),credential.getPassword(),
+        return credentialMapper.updateCredential(credential.getUrl(), credential.getUsername(), credential.getPassword(),
                 credential.getCredentialId());
     }
 
-    public List<Credential> getAllCredentials(){
+    public int deleteCredential(Credential credential) {
+        return credentialMapper.deleteCredential(credential.getCredentialId());
+    }
+
+    public List<Credential> getAllCredentials() {
         return credentialMapper.selectAllCredentials();
     }
 
+    public String getDecryptedCredentialPassword(Integer credentialId) {
+        return encryptionService.decryptValue(getCredentialById(credentialId).getPassword(), "1234567891234567");
+    }
+
+    Credential getCredentialById(Integer credentialId) {
+        return credentialMapper.selectCredentialById(credentialId);
+    }
 
 }

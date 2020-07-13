@@ -83,12 +83,29 @@ public class HomeController {
         return "result";
     }
 
-    @PostMapping("/editCredential")
+    @PostMapping(value = "/postForDecryptedPassword")
+    public String postForDecryptedPassword(@RequestBody Credential credential, Authentication authentication) {
+        System.out.println("Password to ask for is " + credential.getPassword() + credential.getCredentialId());
+        return "result";
+    }
+
+
+    @PostMapping(value = "/editCredential")
     public String editCredential(@ModelAttribute(value = "credential") Credential credential, Model model,
                                  Authentication authentication) {
         System.out.println("credentialId " + credential.getCredentialId());
         System.out.println("credential url" + credential.getUrl());
+        model.addAttribute("decryptedCredentialPassword",
+                credentialService.getDecryptedCredentialPassword(credential.getCredentialId()));
         credentialService.updateCredential(credential, authentication);
+
+        return "home";
+    }
+
+    @PostMapping("/deleteCredential")
+    public String deleteCredential(@ModelAttribute(value = "credential") Credential credential) {
+        System.out.println("deleting Credential: " + credential.getCredentialId());
+        credentialService.deleteCredential(credential);
         return "result";
     }
 
