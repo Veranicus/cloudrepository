@@ -120,7 +120,13 @@ public class HomeController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "result";
+    }
 
+    @PostMapping("/deleteFile")
+    public String deleteFile(@RequestParam(value = "fileId") Integer fileId) {
+        System.out.println("deleting File " + fileId);
+        fileService.deleteFile(fileId);
         return "result";
     }
 

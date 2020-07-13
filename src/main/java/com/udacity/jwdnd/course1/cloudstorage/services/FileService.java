@@ -42,6 +42,10 @@ public class FileService {
         return fileMapper.selectAllFiles();
     }
 
+    public int deleteFile(Integer fileId){
+        return fileMapper.deleteFile(fileId);
+    }
+
 //    private static byte[] convertFileContentToBlob(byte[] fileContent) throws IOException {
 //        byte[] blob = null;
 //        try {

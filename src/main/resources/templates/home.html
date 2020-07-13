@@ -50,12 +50,18 @@
                         </thead>
                     <tbody>
                         <tr th:unless="${#lists.isEmpty(allFiles)}"
-                            th:each="file : ${allFiles}">
+                            th:each="homeFile : ${allFiles}">
                             <td>
                                 <a target="_blank" class="btn btn-success">View</a>
-                                <a class="btn btn-danger">Delete</a>
+                                <form action="#" method="POST" th:action="@{/home/deleteFile}">
+                                    <input type="hidden" name="fileId" th:value="*{homeFile.fileId}">
+                                    <button class="btn btn-danger"
+                                            th:data-fileId="${homeFile.fileId}"
+                                            th:onclick="javascript:deleteFileModel([[${homeFile}]])">Delete
+                                    </button>
+                                </form>
                             </td>
-                            <th scope="row" th:text="${file.filename}"></th>
+                            <th scope="row" th:text="${homeFile.filename}"></th>
                         </tr>
                         </tbody>
                     </table>
@@ -373,6 +379,9 @@
     }
     function deleteCredentialmodel(credential) {
         $('#credential-id').val(credential.credentialId ? credential.credentialId : '');
+    }
+    function deleteFileModel(homeFile) {
+        // $('#file-id').val(homeFile.fileId ? homeFile.fileId : '');
     }
 
     //Function to show modal with some prepopulated fields
