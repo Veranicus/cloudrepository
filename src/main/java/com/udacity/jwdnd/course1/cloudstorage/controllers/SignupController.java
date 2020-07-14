@@ -44,4 +44,9 @@ public class SignupController {
         } else model.addAttribute("signupError", signupError);
         return "signup";
     }
+
+    @PostMapping("/")
+    public String redirectLogin() {
+        return "redirect:login";
+    }
 }

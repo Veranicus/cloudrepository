@@ -26,25 +26,39 @@ public class FileService {
         this.userMapper = userMapper;
     }
 
+    public File selectFileByName(String fileName) {
+        File fileToReturn = null;
+        fileToReturn = fileMapper.selectFileByName(fileName);
+        return fileToReturn;
+    }
+
     public int saveFile(FileModel fileModel, Authentication authentication) {
         File file = null;
         try {
-             file = new File(null, fileModel.getFilename(), fileModel.getContentType(), fileModel.getFileSize(),
+            file = new File(null, fileModel.getFilename(), fileModel.getContentType(), fileModel.getFileSize(),
                     userMapper.getUserByUsername(authentication.getName()).getUserId(),
-                   fileModel.getFileData());
+                    fileModel.getFileData());
             logger.info("Inserting new file " + fileModel.getFilename());
-        }catch (Exception j){
+        } catch (Exception j) {
             j.printStackTrace();
         }
         return fileMapper.insertFile(file);
     }
-    public List<File> getAllFiles(){
+
+    public List<File> getAllFiles() {
         return fileMapper.selectAllFiles();
     }
 
-    public int deleteFile(Integer fileId){
+    public int deleteFile(Integer fileId) {
         return fileMapper.deleteFile(fileId);
     }
+
+    public boolean checkIfFileWithFilenameAlreadyExist(String filename) {
+        boolean fileExist;
+        fileExist = selectFileByName(filename) == null;
+        return fileExist;
+    }
+
 
 //    private static byte[] convertFileContentToBlob(byte[] fileContent) throws IOException {
 //        byte[] blob = null;

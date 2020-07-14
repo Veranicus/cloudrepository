@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.entities.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.entities.File;
 import com.udacity.jwdnd.course1.cloudstorage.entities.Note;
 import com.udacity.jwdnd.course1.cloudstorage.models.CredentialModel;
 import com.udacity.jwdnd.course1.cloudstorage.models.FileModel;
@@ -8,6 +9,7 @@ import com.udacity.jwdnd.course1.cloudstorage.models.NoteModel;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -113,6 +115,14 @@ public class HomeController {
 
     @PostMapping("/saveFile")
     public String saveFile(Model model, @RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication) {
+        String editError = null;
+
+        if (fileUpload.isEmpty()){
+            editError = "Please choose file you want to upload.";
+        }
+        if (!fileService.checkIfFileWithFilenameAlreadyExist(fileUpload.getOriginalFilename())){
+            editError = "File with filename " + fileUpload.getOriginalFilename() + " already exists.";
+        }
         try {
             FileModel fileModel1 = new FileModel(fileUpload.getOriginalFilename(), fileUpload.getContentType(),
                     String.valueOf(fileUpload.getSize()), fileUpload.getBytes());
@@ -120,6 +130,7 @@ public class HomeController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        model.addAttribute("editError",editError);
         return "result";
     }
 
@@ -128,6 +139,16 @@ public class HomeController {
         System.out.println("deleting File " + fileId);
         fileService.deleteFile(fileId);
         return "result";
+    }
+
+    @GetMapping("/download/{filename}/db")
+    public ResponseEntity downloadFromDB(@PathVariable(value = "filename") String fileName) {
+        System.out.println("Downloading filename " + fileName);
+        File file = fileService.selectFileByName(fileName);
+        System.out.println(file.getFilename() + file.getContentType());
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .body(file.getFileData());
     }
 
 }
