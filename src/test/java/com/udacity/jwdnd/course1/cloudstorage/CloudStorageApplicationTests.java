@@ -128,8 +128,6 @@ class CloudStorageApplicationTests {
         Assertions.assertEquals(noteTitle,homeControllerPageTest.getNoteTitle());
         Assertions.assertEquals(noteDescription,homeControllerPageTest.getNoteDescription());
 
-
-
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -29,7 +28,7 @@ public class HomeControllerPageTest {
     @FindBy(css = "#noteDescription")
     private WebElement noteDescriptionsubmited;
 
-    @FindBy(css = "#addNewNote")
+    @FindBy(xpath = "//*[@id=\"addNewNote\"]")
     private WebElement addNewNoteButton;
 
 
@@ -45,7 +44,7 @@ public class HomeControllerPageTest {
 //        }catch (InterruptedException i){
 //            i.printStackTrace();
 //        }
-        addNewNoteButton.sendKeys(Keys.ENTER);
+        addNewNoteButton.click();
         this.noteTitle.sendKeys(noteTitle);
         this.noteDescription.sendKeys(noteDescription);
         noteSubmit.click();
