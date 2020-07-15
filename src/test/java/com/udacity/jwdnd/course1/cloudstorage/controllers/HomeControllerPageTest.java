@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HomeControllerPageTest {
 
@@ -31,14 +32,24 @@ public class HomeControllerPageTest {
     @FindBy(xpath = "//*[@id=\"addNewNote\"]")
     private WebElement addNewNoteButton;
 
+    @FindBy(css = "#noteSaveSubmit")
+    private WebElement noteSaveSubmit;
+
+    @FindBy(css = "#editNoteButton")
+    private WebElement editNoteButton;
+
+    private WebDriver webDriver;
+
 
     public HomeControllerPageTest(WebDriver webDriver) {
+        this.webDriver = webDriver;
         PageFactory.initElements(webDriver, this);
     }
 
 
     public void saveNote(String noteTitle, String noteDescription) {
         noteTab.click();
+        WebDriverWait wait = new WebDriverWait(webDriver, 20);
 //        try {
 //            wait(50);
 //        }catch (InterruptedException i){

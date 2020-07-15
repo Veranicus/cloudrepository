@@ -5,8 +5,11 @@ import com.udacity.jwdnd.course1.cloudstorage.controllers.LoginControllerPageTes
 import com.udacity.jwdnd.course1.cloudstorage.controllers.SignupControllerPageTest;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
@@ -102,6 +105,49 @@ class CloudStorageApplicationTests {
     }
 
     @Test
+    void testNoteCreation2() {
+
+        String username = "test";
+        String password = "test";
+        String firstName = "test";
+        String lastName = "test";
+
+        String noteTitle = "test";
+        String noteDescription = "test";
+
+        driver.get("http://localhost:" + this.port + "/signup");
+
+        SignupControllerPageTest signupControllerPageTest = new SignupControllerPageTest(driver);
+        signupControllerPageTest.signup(username, password, firstName, lastName);
+
+        driver.get("http://localhost:" + this.port + "/login");
+        LoginControllerPageTest loginControllerPageTest = new LoginControllerPageTest(driver);
+        loginControllerPageTest.login(username, password);
+
+        driver.get("http://localhost:" + this.port + "/home");
+
+        driver.findElement(By.id("nav-notes-tab")).click();
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("addNewNote"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("note-title"))).sendKeys(noteTitle);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("note-description"))).sendKeys(noteDescription);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("noteSaveSubmit"))).click();
+
+        driver.get("http://localhost:" + this.port + "/home");
+
+        driver.findElement(By.id("nav-notes-tab")).click();
+        HomeControllerPageTest homeControllerPageTest = new HomeControllerPageTest(driver);
+
+        String resultNoteTitle = wait.until(ExpectedConditions.elementToBeClickable(By.id("noteTitleAfterSubmit"))).getText();
+        String resultNoteDescription = wait.until(ExpectedConditions.elementToBeClickable(By.id("noteDescriptionAfterSubmit"))).getText();
+
+        Assertions.assertEquals(noteTitle, resultNoteTitle);
+        Assertions.assertEquals(noteDescription, resultNoteDescription);
+//        driver.navigate().to(HOME_URL);
+//        webDriver.findElement(By.id("nav-notes-tab")).click();
+    }
+
+    @Test
     void testNoteCreation() {
         String username = "test";
         String password = "test";
@@ -123,10 +169,70 @@ class CloudStorageApplicationTests {
 
         driver.get("http://localhost:" + this.port + "/home");
         HomeControllerPageTest homeControllerPageTest = new HomeControllerPageTest(driver);
-        homeControllerPageTest.saveNote(noteTitle,noteDescription);
+        homeControllerPageTest.saveNote(noteTitle, noteDescription);
 
-        Assertions.assertEquals(noteTitle,homeControllerPageTest.getNoteTitle());
-        Assertions.assertEquals(noteDescription,homeControllerPageTest.getNoteDescription());
+        Assertions.assertEquals(noteTitle, homeControllerPageTest.getNoteTitle());
+        Assertions.assertEquals(noteDescription, homeControllerPageTest.getNoteDescription());
+
+    }
+
+    @Test
+    void testNoteEditing() {
+        String username = "test";
+        String password = "test";
+        String firstName = "test";
+        String lastName = "test";
+
+        String noteTitle = "test";
+        String noteDescription = "test";
+
+        driver.get("http://localhost:" + this.port + "/signup");
+
+        SignupControllerPageTest signupControllerPageTest = new SignupControllerPageTest(driver);
+        signupControllerPageTest.signup(username, password, firstName, lastName);
+
+        driver.get("http://localhost:" + this.port + "/login");
+        LoginControllerPageTest loginControllerPageTest = new LoginControllerPageTest(driver);
+        loginControllerPageTest.login(username, password);
+
+        driver.get("http://localhost:" + this.port + "/home");
+
+        driver.findElement(By.id("nav-notes-tab")).click();
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("addNewNote"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("note-title"))).sendKeys(noteTitle);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("note-description"))).sendKeys(noteDescription);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("noteSaveSubmit"))).click();
+
+        driver.get("http://localhost:" + this.port + "/home");
+
+        driver.findElement(By.id("nav-notes-tab")).click();
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("editNoteButton"))).click();
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("editNote-title")))
+                .clear();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("editNote-title")))
+                .sendKeys("testTitle2");
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("editNote-description")))
+                .clear();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("editNote-description")))
+                .sendKeys("testDescription2");
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("editNoteSaveButton"))).click();
+
+        driver.get("http://localhost:" + this.port + "/home");
+
+        driver.findElement(By.id("nav-notes-tab")).click();
+
+        String resultNoteTitle =
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("noteTitleAfterSubmit"))).getText();
+        String resultNoteDescription =
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("noteDescriptionAfterSubmit"))).getText();
+
+        Assertions.assertEquals("testTitle2", resultNoteTitle);
+        Assertions.assertEquals("testDescription2", resultNoteDescription);
+
 
     }
 
@@ -143,4 +249,6 @@ class CloudStorageApplicationTests {
         Assertions.assertEquals("Invalid username or password",
                 loginControllerPageTest.getErrorUserMessageText());
     }
+
+
 }

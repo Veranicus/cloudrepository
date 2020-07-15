@@ -103,7 +103,7 @@
                                     <input type="hidden" id="noteTitle" name="noteId" th:value="*{noteTitle}">
                                     <input type="hidden" id="noteDescription" name="noteId"
                                            th:value="*{noteDescription}">
-                                    <button type="button" class="btn btn-success"
+                                    <button type="button" id="editNoteButton" class="btn btn-success"
                                             th:data-noteId="${note.noteId}"
                                             th:data-noteTitle="${note.noteTitle}"
                                             th:data-noteDescription="${note.noteDescription}"
@@ -117,8 +117,11 @@
                                     </button>
                                 </form>
                             </td>
-                            <th scope="row" th:text="${note.noteTitle}">Example Note Title</th>
-                            <td th:text="${note.noteDescription}">Example Note Description</td>
+                            <th scope="row" id="noteTitleAfterSubmit" th:text="${note.noteTitle}">Example Note Title
+                            </th>
+                            <td th:text="${note.noteDescription}" id="noteDescriptionAfterSubmit">Example Note
+                                Description
+                            </td>
                             </form>
                         </tr>
                         </tbody>
@@ -153,7 +156,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="$('#editNoteSubmit').click();">
+                            <button type="button" id="editNoteSaveButton" class="btn btn-primary"
+                                    onclick="$('#editNoteSubmit').click();">
                                 Save
                                 changes
                             </button>
@@ -190,7 +194,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save
+                            <button type="button" id="noteSaveSubmit" class="btn btn-primary"
+                                    onclick="$('#noteSubmit').click();">Save
                                 changes
                             </button>
                         </div>
