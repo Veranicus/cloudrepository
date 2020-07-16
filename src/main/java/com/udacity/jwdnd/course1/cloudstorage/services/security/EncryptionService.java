@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Base64;
 
 @Service
@@ -33,11 +34,11 @@ public class EncryptionService {
     }
 
     public String decryptValue(String data, String key) {
-        byte[] decryptedValue = null;
+        byte[] decryptedValue = Base64.getDecoder().decode(key);
 
         try {
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            SecretKey secretKey = new SecretKeySpec(key.getBytes(), "AES");
+            SecretKey secretKey = new SecretKeySpec(Arrays.copyOf(decryptedValue, 16), "AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             decryptedValue = cipher.doFinal(Base64.getDecoder().decode(data));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException

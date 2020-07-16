@@ -38,6 +38,9 @@ public class HomeControllerPageTest {
     @FindBy(css = "#editNoteButton")
     private WebElement editNoteButton;
 
+    @FindBy(css = "#deleteNoteButton")
+    private WebElement deleteNoteButton;
+
     private WebDriver webDriver;
 
 
