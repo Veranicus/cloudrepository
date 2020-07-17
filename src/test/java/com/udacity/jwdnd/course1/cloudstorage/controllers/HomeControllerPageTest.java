@@ -29,6 +29,16 @@ public class HomeControllerPageTest {
     @FindBy(css = "#noteDescription")
     private WebElement noteDescriptionsubmited;
 
+
+    @FindBy(css = "#credentialUrlAfterSubmit")
+    private WebElement credentialUrlSubmitted;
+
+    @FindBy(css = "#credentialUsernameAfterSubmit")
+    private WebElement credentialUsernameSubmitted;
+
+    @FindBy(css = "#credentialPasswordAfterSubmit")
+    private WebElement credentialPasswordSubmitted;
+
     @FindBy(xpath = "//*[@id=\"addNewNote\"]")
     private WebElement addNewNoteButton;
 
@@ -74,5 +84,17 @@ public class HomeControllerPageTest {
 
     public String getNoteDescription() {
         return noteDescriptionsubmited.getText();
+    }
+
+    public String getCredentialUrlSubmitted() {
+        return credentialUrlSubmitted.getText();
+    }
+
+    public String getCredentialUsernameSubmitted() {
+        return credentialUsernameSubmitted.getText();
+    }
+
+    public String getCredentialPasswordSubmitted() {
+        return credentialPasswordSubmitted.getText();
     }
 }

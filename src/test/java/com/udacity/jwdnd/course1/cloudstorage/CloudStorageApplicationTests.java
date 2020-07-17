@@ -12,13 +12,16 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//I'm using specific port just for testing editing credentials. I receive password after clicking on edit
+//With ajax call to localhost:8080.  If I test with random port, this test always fails.
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext
 class CloudStorageApplicationTests {
 
-    @LocalServerPort
-    private int port;
+
+    private int port = 8080;
 
     public static WebDriver driver;
 
@@ -342,8 +345,10 @@ class CloudStorageApplicationTests {
         driver.get("http://localhost:" + this.port + "/home");
         driver.findElement(By.id("nav-credentials-tab")).click();
 
-        String resultCredentialUrl = wait.until(ExpectedConditions.elementToBeClickable(By.id("credentialUrlAfterSubmit"))).getText();
-        String resultCredentialUsername = wait.until(ExpectedConditions.elementToBeClickable(By.id("credentialUsernameAfterSubmit"))).getText();
+        String resultCredentialUrl =
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("credentialUrlAfterSubmit"))).getText();
+        String resultCredentialUsername =
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("credentialUsernameAfterSubmit"))).getText();
         String resultCredentialPassword =
                 wait.until(ExpectedConditions.elementToBeClickable(By.id("credentialPasswordAfterSubmit"))).getText();
 
@@ -354,19 +359,15 @@ class CloudStorageApplicationTests {
         driver.get("http://localhost:" + this.port + "/home");
 
         driver.findElement(By.id("nav-credentials-tab")).click();
-        HomeControllerPageTest homeControllerPageTest = new HomeControllerPageTest(driver);
         wait.until(ExpectedConditions.elementToBeClickable(By.id("editCredentialButton"))).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("editCredential-url"))).clear();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("editCredential-url"))).sendKeys(credentialURL2);
         wait.until(ExpectedConditions.elementToBeClickable(By.id("editCredential-username"))).clear();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("editCredential-username"))).sendKeys(credentialUsername2);
-        String shownPassword =
-                wait.until(ExpectedConditions.elementToBeClickable(By.id("editCredential-password"))).getText();
-        Assertions.assertEquals(credentialPassword, shownPassword);
+
         wait.until(ExpectedConditions.elementToBeClickable(By.id("editCredential-password"))).clear();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("editCredential-password"))).sendKeys(credentialPassword2);
         wait.until(ExpectedConditions.elementToBeClickable(By.id("editCredentialSaveButton"))).click();
-
         driver.get("http://localhost:" + this.port + "/home");
         driver.findElement(By.id("nav-credentials-tab")).click();
 
@@ -380,6 +381,68 @@ class CloudStorageApplicationTests {
         Assertions.assertEquals(credentialURL2, resultCredentialUrl2);
         Assertions.assertEquals(credentialUsername2, resultCredentialUsername2);
         Assertions.assertNotEquals(credentialPassword2, resultCredentialPassword2);
+    }
+
+    @Test
+    void testCredentialDeletion() {
+        String username = "test";
+        String password = "test";
+        String firstName = "test";
+        String lastName = "test";
+
+        String credentialURL = "testCredentialUrl";
+        String credentialUsername = "testCredentialUsername";
+        String credentialPassword = "testCredentialPassword";
+
+        driver.get("http://localhost:" + this.port + "/signup");
+
+        SignupControllerPageTest signupControllerPageTest = new SignupControllerPageTest(driver);
+        signupControllerPageTest.signup(username, password, firstName, lastName);
+
+        driver.get("http://localhost:" + this.port + "/login");
+        LoginControllerPageTest loginControllerPageTest = new LoginControllerPageTest(driver);
+        loginControllerPageTest.login(username, password);
+
+        driver.get("http://localhost:" + this.port + "/home");
+
+        driver.findElement(By.id("nav-credentials-tab")).click();
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("newCredentialButton"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-url"))).sendKeys(credentialURL);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-username"))).sendKeys(credentialUsername);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-password"))).sendKeys(credentialPassword);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("saveCredentialButton"))).click();
+
+        driver.get("http://localhost:" + this.port + "/home");
+
+        driver.findElement(By.id("nav-credentials-tab")).click();
+
+        String resultCredentialUrl = wait.until(ExpectedConditions.elementToBeClickable(By.id("credentialUrlAfterSubmit"))).getText();
+        String resultCredentialUsername = wait.until(ExpectedConditions.elementToBeClickable(By.id("credentialUsernameAfterSubmit"))).getText();
+        String resultCredentialPassword =
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("credentialPasswordAfterSubmit"))).getText();
+
+        Assertions.assertEquals(credentialURL, resultCredentialUrl);
+        Assertions.assertEquals(credentialUsername, resultCredentialUsername);
+        Assertions.assertNotEquals(credentialPassword, resultCredentialPassword);
+
+        driver.get("http://localhost:" + this.port + "/home");
+
+        driver.findElement(By.id("nav-credentials-tab")).click();
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("deleteCredentialButton"))).click();
+
+        driver.get("http://localhost:" + this.port + "/home");
+
+        driver.findElement(By.id("nav-credentials-tab")).click();
+
+
+        HomeControllerPageTest homeControllerPageTest = new HomeControllerPageTest(driver);
+
+        Assertions.assertThrows(NoSuchElementException.class, homeControllerPageTest::getCredentialUrlSubmitted);
+        Assertions.assertThrows(NoSuchElementException.class, homeControllerPageTest::getCredentialUsernameSubmitted);
+        Assertions.assertThrows(NoSuchElementException.class, homeControllerPageTest::getCredentialPasswordSubmitted);
+
     }
 
     @Test

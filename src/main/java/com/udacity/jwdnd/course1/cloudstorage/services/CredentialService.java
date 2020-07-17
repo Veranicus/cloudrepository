@@ -10,8 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.Base64;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -33,6 +34,7 @@ public class CredentialService {
 
     public int saveCredential(CredentialModel credentialModel, Authentication authentication) {
         String generatedSecretKey = generateSecretKey();
+        System.out.println("GeneratedSecretKey is " + generatedSecretKey);
         Credential credential = new Credential(null, credentialModel.getUrl(), credentialModel.getUsername(),
                 generatedSecretKey, encryptionService.encryptValue(credentialModel.getPassword(),
                 generatedSecretKey),
@@ -41,7 +43,8 @@ public class CredentialService {
     }
 
     public int updateCredential(Credential credential, Authentication authentication) {
-        return credentialMapper.updateCredential(credential.getUrl(), credential.getUsername(), credential.getPassword(),
+        return credentialMapper.updateCredential(credential.getUrl(), credential.getUsername(),
+                encryptionService.encryptValue(credential.getPassword(), getKeyOfCredential(credential.getCredentialId())),
                 credential.getCredentialId());
     }
 
@@ -50,7 +53,7 @@ public class CredentialService {
     }
 
     private String getKeyOfCredential(Integer credentialId) {
-        return credentialMapper.selectCredentialPasswordById(credentialId);
+        return credentialMapper.selectCredentialKeyById(credentialId);
     }
 
     public List<Credential> getAllCredentials() {
@@ -59,18 +62,28 @@ public class CredentialService {
 
     public String getDecryptedCredentialPassword(Integer credentialId) {
         System.out.println("CredentialId to decrypt change is " + credentialId);
-        return encryptionService.decryptValue(getCredentialById(credentialId).getPassword(),
-                getKeyOfCredential(credentialId));
+        Credential credentialToDecrypt = getCredentialById(credentialId);
+        return encryptionService.decryptValue(credentialToDecrypt.getPassword(),
+                credentialToDecrypt.getKey());
     }
 
     private String generateSecretKey() {
-        SecureRandom random = new SecureRandom();
-        byte[] key = new byte[16];
-        random.nextBytes(key);
-        return Base64.getEncoder().encodeToString(key);
+        try {
+            KeyGenerator gen = KeyGenerator.getInstance("AES");
+            gen.init(128); /* 128-bit AES */
+            SecretKey secret = gen.generateKey();
+            byte[] binary = secret.getEncoded();
+            String key = String.format("%032X", new BigInteger(+1, binary));
+            return key;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     Credential getCredentialById(Integer credentialId) {
+        System.out.println(credentialMapper.selectCredentialById(credentialId).getPassword() + " password of credential");
+        System.out.println(credentialMapper.selectCredentialById(credentialId).getKey() + " key of credential");
         return credentialMapper.selectCredentialById(credentialId);
     }
 

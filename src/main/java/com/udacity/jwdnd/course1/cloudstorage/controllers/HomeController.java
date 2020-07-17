@@ -69,16 +69,9 @@ public class HomeController {
                            Authentication authentication) {
         System.out.println("noteid " + note.getNoteId());
         System.out.println("notedesc" + note.getNoteDescription());
-        noteService.editNote(note, authentication);
+        noteService.editNote(note);
         return "result";
     }
-//
-//    @PostMapping(path = "/editNote/{editNoteId}")
-//    public String editNote(@RequestBody Note note, @PathVariable(value = "editNoteId") Integer noteId) {
-//        System.out.println("noteid " + noteId);
-//        System.out.println("notedesc" + note.getNoteDescription());
-//        return "result";
-//    }
 
     @PostMapping(value = "/saveCredential")
     public String saveCredential(@ModelAttribute("credentialModel") CredentialModel credentialModel, Model model,
@@ -100,7 +93,6 @@ public class HomeController {
                                  Authentication authentication) {
         System.out.println("credentialId " + credential.getCredentialId());
         System.out.println("credential url" + credential.getUrl());
-//        model.addAttribute("decryptedCredentialPassword",
 
         credentialService.updateCredential(credential, authentication);
         return "result";

@@ -41,7 +41,7 @@ public class NoteService {
         noteMapper.insertNote(note);
     }
 
-    public int editNote(Note note, Authentication authentication) {
+    public int editNote(Note note) {
 
         System.out.println(note.getNoteId());
 //        Note noteforUpdate = noteMapper.getNoteById(note.getNoteId());

@@ -59,15 +59,4 @@ public class FileService {
         return fileExist;
     }
 
-
-//    private static byte[] convertFileContentToBlob(byte[] fileContent) throws IOException {
-//        byte[] blob = null;
-//        try {
-//
-//             blob = new javax.sql.rowset.serial.SerialBlob(fileContent);
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return blob;
-//    }
 }

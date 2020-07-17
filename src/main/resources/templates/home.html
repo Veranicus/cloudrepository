@@ -232,7 +232,7 @@
                                     </button>
                                     <form action="#" method="POST" th:action="@{/home/deleteCredential}">
                                         <input type="hidden" name="credentialId" th:value="${credential.credentialId}">
-                                        <button class="btn btn-danger"
+                                        <button class="btn btn-danger" id="deleteCredentialButton"
                                                 th:data-credentialId="${credential.credentialId}"
                                                 th:onclick="javascript:deleteCredentialmodel([[${credential}]])">Delete
                                         </button>
