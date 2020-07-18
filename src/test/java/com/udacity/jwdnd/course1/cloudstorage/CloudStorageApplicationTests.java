@@ -12,16 +12,17 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 //I'm using specific port just for testing editing credentials. I receive password after clicking on edit
 //With ajax call to localhost:8080.  If I test with random port, this test always fails.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class CloudStorageApplicationTests {
 
-
-    private int port = 8080;
+    @LocalServerPort
+    private final int port = 8080;
 
     public static WebDriver driver;
 
@@ -448,8 +449,8 @@ class CloudStorageApplicationTests {
     @Test
     void testUserWrongLogin() {
 
-        String username = "test";
-        String password = "test";
+        String username = "test14";
+        String password = "test14";
 
         driver.get("http://localhost:" + this.port + "/login");
 
