@@ -58,15 +58,19 @@ public class HomeController {
     }
 
     @PostMapping("/deleteNote")
-    public String deleteNote(@ModelAttribute(value = "note") Note note) {
+    public String deleteNote(@ModelAttribute(value = "note") Note note, Model model) {
         System.out.println("deleting NOTE: " + note.getNoteId());
-        noteService.deleteNote(note.getNoteId());
+        int deletedNoteStatus = noteService.deleteNote(note.getNoteId());
+        String editError = null;
+        if (deletedNoteStatus < 0) {
+            editError = "There was an error with deleting note with id " + note.getNoteId();
+        }
+        model.addAttribute("editError", editError);
         return "result";
     }
 
     @PostMapping("/editNote")
-    public String editNote(@ModelAttribute(value = "note") Note note, Model model,
-                           Authentication authentication) {
+    public String editNote(@ModelAttribute(value = "note") Note note) {
         System.out.println("noteid " + note.getNoteId());
         System.out.println("notedesc" + note.getNoteDescription());
         noteService.editNote(note);
@@ -99,9 +103,14 @@ public class HomeController {
     }
 
     @PostMapping("/deleteCredential")
-    public String deleteCredential(@ModelAttribute(value = "credential") Credential credential) {
+    public String deleteCredential(@ModelAttribute(value = "credential") Credential credential, Model model) {
         System.out.println("deleting Credential: " + credential.getCredentialId());
-        credentialService.deleteCredential(credential);
+        int deletedCredentialStatus = credentialService.deleteCredential(credential);
+        String editError = null;
+        if (deletedCredentialStatus < 0) {
+            editError = "There was an error with deleting credential with id " + credential.getCredentialId();
+        }
+        model.addAttribute("editError", editError);
         return "result";
     }
 
@@ -109,10 +118,10 @@ public class HomeController {
     public String saveFile(Model model, @RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication) {
         String editError = null;
 
-        if (fileUpload.isEmpty()){
+        if (fileUpload.isEmpty()) {
             editError = "Please choose file you want to upload.";
         }
-        if (!fileService.checkIfFileWithFilenameAlreadyExist(fileUpload.getOriginalFilename())){
+        if (!fileService.checkIfFileWithFilenameAlreadyExist(fileUpload.getOriginalFilename())) {
             editError = "File with filename " + fileUpload.getOriginalFilename() + " already exists.";
         }
         try {
@@ -120,16 +129,22 @@ public class HomeController {
                     String.valueOf(fileUpload.getSize()), fileUpload.getBytes());
             fileService.saveFile(fileModel1, authentication);
         } catch (IOException e) {
+            editError = "There was an error while processing your file.";
             e.printStackTrace();
         }
-        model.addAttribute("editError",editError);
+        model.addAttribute("editError", editError);
         return "result";
     }
 
     @PostMapping("/deleteFile")
-    public String deleteFile(@RequestParam(value = "fileId") Integer fileId) {
+    public String deleteFile(@RequestParam(value = "fileId") Integer fileId, Model model) {
         System.out.println("deleting File " + fileId);
-        fileService.deleteFile(fileId);
+        int deletedFileStatus = fileService.deleteFile(fileId);
+        String editError = null;
+        if (deletedFileStatus < 0) {
+            editError = "There was an error with deleting file with id " + fileId;
+        }
+        model.addAttribute("editError", editError);
         return "result";
     }
 
