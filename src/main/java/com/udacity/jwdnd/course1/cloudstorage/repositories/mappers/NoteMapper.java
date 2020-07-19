@@ -2,9 +2,11 @@ package com.udacity.jwdnd.course1.cloudstorage.repositories.mappers;
 
 import com.udacity.jwdnd.course1.cloudstorage.entities.Note;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 @Mapper
 public interface NoteMapper {
 
@@ -23,11 +25,10 @@ public interface NoteMapper {
     @Update("UPDATE NOTES SET noteTitle=#{noteTitle}, noteDescription=#{noteDescription}" +
             "WHERE noteId = #{noteId}")
     int updateNote(@Param("noteTitle") String noteTitle, @Param("noteDescription") String noteDescription,
-    @Param("noteId")Integer noteId);
+                   @Param("noteId")Integer noteId);
 
     @Delete("DELETE FROM NOTES WHERE noteId = #{noteId}")
     int deleteNote(Integer noteId);
-
 
 
 }

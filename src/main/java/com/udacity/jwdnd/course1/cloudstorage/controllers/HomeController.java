@@ -125,9 +125,11 @@ public class HomeController {
             editError = "File with filename " + fileUpload.getOriginalFilename() + " already exists.";
         }
         try {
-            FileModel fileModel1 = new FileModel(fileUpload.getOriginalFilename(), fileUpload.getContentType(),
-                    String.valueOf(fileUpload.getSize()), fileUpload.getBytes());
-            fileService.saveFile(fileModel1, authentication);
+            if (editError == null) {
+                FileModel fileModel1 = new FileModel(fileUpload.getOriginalFilename(), fileUpload.getContentType(),
+                        String.valueOf(fileUpload.getSize()), fileUpload.getBytes());
+                fileService.saveFile(fileModel1, authentication);
+            }
         } catch (IOException e) {
             editError = "There was an error while processing your file.";
             e.printStackTrace();
